@@ -38,22 +38,22 @@ public class AdminServiceImpl implements AdminService{
 
 		String uuid = "admin" + UUID.randomUUID();
 
+		// 비밀번호 암호화
+		String newPassword = hashPassword(adminAddRequestDto.getPassword());
+
 		Admin admin = Admin.builder()
 			.uuid(uuid)
 			.email(adminAddRequestDto.getEmail())
-			.password(adminAddRequestDto.getPassword())
+			.password(newPassword)
 			.name(adminAddRequestDto.getName())
 			.grant(adminAddRequestDto.getGrant())
 			.build();
 
-		// 비밀번호 암호화
-		hashPassword(adminAddRequestDto.getPassword());
-
 		adminRepository.save(admin);
 	}
 
-	public void hashPassword(String password) {
-		password = new BCryptPasswordEncoder().encode(password);
+	public String hashPassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
 	}
 
 	@Override
