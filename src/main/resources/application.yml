@@ -1,1 +1,15 @@
-spring.application.name=admin
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/admin
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: postgresql
+
+JWT:
+  SECRET_KEY: ${JWT.SECRET_KEY}
+  EXPIRATION_TIME: 3600000

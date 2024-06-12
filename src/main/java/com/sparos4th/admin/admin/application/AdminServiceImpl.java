@@ -11,6 +11,8 @@ import com.sparos4th.admin.common.security.JwtTokenProvider;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +24,25 @@ public class AdminServiceImpl implements AdminService{
 
 	private final AdminRepository adminRepository;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto) {
-		return null;
+		Admin admin = adminRepository.findByEmail(adminLoginRequestDto.getEmail())
+			.orElseThrow(() -> new CustomException(ResponseStatus.FAILED_TO_LOGIN));
+
+		if (bCryptPasswordEncoder.matches(adminLoginRequestDto.getPassword(), admin.getPassword())) {
+			String token = createToken(admin);
+			return TokenResponseDto.builder()
+				.accessToken(token)
+				.build();
+
+		} else throw new CustomException(ResponseStatus.FAILED_TO_LOGIN);
 	}
 
 	@Override
 	@Transactional
-	public void addAdmin(AdminAddRequestDto adminAddRequestDto, String loginUuid) {
+	public void addAdmin(AdminAddRequestDto adminAddRequestDto) {
 		// 이메일 중복 확인
 		adminRepository.findByEmail(adminAddRequestDto.getEmail()).ifPresent(m -> {
 				throw new CustomException(ResponseStatus.DUPLICATE_EMAIL);
@@ -56,18 +68,25 @@ public class AdminServiceImpl implements AdminService{
         return new BCryptPasswordEncoder().encode(password);
 	}
 
-	@Override
-	public void changePassword(AdminChangePasswordRequestDto adminChangePasswordRequestDto) {
-
+	//	토큰 생성
+	private String createToken(Admin admin) {
+		UserDetails userDetails = User.withUsername(admin.getEmail()).password(admin.getUuid())
+			.roles(String.valueOf(admin.getGrant())).build();
+		return jwtTokenProvider.generateToken(userDetails);
 	}
 
-	@Override
-	public void changeGrant(AdminChangeGrantRequestDto adminChangeGrantRequestDto) {
-
-	}
-
-	@Override
-	public void deleteAdmin(AdminDeleteRequestDto adminDeleteRequestDto) {
-
-	}
+//	@Override
+//	public void changePassword(AdminChangePasswordRequestDto adminChangePasswordRequestDto) {
+//
+//	}
+//
+//	@Override
+//	public void changeGrant(AdminChangeGrantRequestDto adminChangeGrantRequestDto) {
+//
+//	}
+//
+//	@Override
+//	public void deleteAdmin(AdminDeleteRequestDto adminDeleteRequestDto) {
+//
+//	}
 }
