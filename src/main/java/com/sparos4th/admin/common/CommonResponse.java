@@ -1,6 +1,6 @@
 package com.sparos4th.admin.common;
 
-import com.leeforgiveness.memberservice.common.exception.ResponseStatus;
+import com.sparos4th.admin.common.exception.ResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
