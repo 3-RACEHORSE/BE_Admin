@@ -2,6 +2,7 @@ package com.sparos4th.admin.admin.application;
 
 import com.sparos4th.admin.admin.dto.InfluencerAddRequestDto;
 import com.sparos4th.admin.admin.dto.InfluencerDetailResponseDto;
+import com.sparos4th.admin.admin.dto.InfluencerUpdateRequestDto;
 
 public interface AdminService {
 

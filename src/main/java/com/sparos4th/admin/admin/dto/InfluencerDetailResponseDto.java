@@ -1,5 +1,6 @@
 package com.sparos4th.admin.admin.dto;
 
+import com.sparos4th.admin.admin.vo.InfluencerDetailResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,15 @@ public class InfluencerDetailResponseDto {
 	private String profileImage;
 	private String phoneNum;
 	private String description;
+
+	public static InfluencerDetailResponseVo dtoToVo(
+		InfluencerDetailResponseDto influencerDetailResponseDto) {
+		return new InfluencerDetailResponseVo(
+			influencerDetailResponseDto.getInfluencerUuid(),
+			influencerDetailResponseDto.getName(),
+			influencerDetailResponseDto.getPhoneNum(),
+			influencerDetailResponseDto.getProfileImage(),
+			influencerDetailResponseDto.getDescription()
+		);
+	}
 }
