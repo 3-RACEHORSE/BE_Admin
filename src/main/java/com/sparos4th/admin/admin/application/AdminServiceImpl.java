@@ -30,13 +30,13 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	@Transactional
-	public void addAdmin(AdminAddRequestDto adminAddRequestDto) {
+	public void addAdmin(AdminAddRequestDto adminAddRequestDto, String loginUuid) {
 		// 이메일 중복 확인
 		adminRepository.findByEmail(adminAddRequestDto.getEmail()).ifPresent(m -> {
 				throw new CustomException(ResponseStatus.DUPLICATE_EMAIL);
 			});
 
-		String uuid = "admin" + UUID.randomUUID().toString();
+		String uuid = "admin" + UUID.randomUUID();
 
 		Admin admin = Admin.builder()
 			.uuid(uuid)
