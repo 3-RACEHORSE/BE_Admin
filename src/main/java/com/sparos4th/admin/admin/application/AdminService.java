@@ -1,0 +1,14 @@
+package com.sparos4th.admin.admin.application;
+
+import com.sparos4th.admin.admin.dto.AdminAddRequestDto;
+import com.sparos4th.admin.admin.dto.AdminLoginRequestDto;
+import com.sparos4th.admin.admin.dto.TokenResponseDto;
+import org.springframework.stereotype.Service;
+
+public interface AdminService {
+	TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto);
+	void addAdmin(AdminAddRequestDto adminAddRequestDto, String token);
+	void changePassword(AdminChangePasswordRequestDto adminChangePasswordRequestDto);
+	void changeGrant(AdminChangeGrantRequestDto adminChangeGrantRequestDto);
+	void deleteAdmin(AdminDeleteRequestDto adminDeleteRequestDto);
+}
