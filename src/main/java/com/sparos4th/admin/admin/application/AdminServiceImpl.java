@@ -28,9 +28,11 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	public TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto) {
+		// 이메일(ID)로 가입되어있는지 확인
 		Admin admin = adminRepository.findByEmail(adminLoginRequestDto.getEmail())
 			.orElseThrow(() -> new CustomException(ResponseStatus.FAILED_TO_LOGIN));
 
+		// 해시 암호화된 DB의 비밀번호 저장값과 로그인 정보에 담긴 비밀번호 비교
 		if (bCryptPasswordEncoder.matches(adminLoginRequestDto.getPassword(), admin.getPassword())) {
 			String token = createToken(admin);
 			return TokenResponseDto.builder()
