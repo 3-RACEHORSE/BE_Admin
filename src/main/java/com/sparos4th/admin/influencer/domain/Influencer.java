@@ -1,4 +1,4 @@
-package com.sparos4th.admin.admin.domain;
+package com.sparos4th.admin.influencer.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

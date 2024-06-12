@@ -1,6 +1,6 @@
-package com.sparos4th.admin.admin.infrastructure;
+package com.sparos4th.admin.influencer.infrastructure;
 
-import com.sparos4th.admin.admin.domain.Influencer;
+import com.sparos4th.admin.influencer.domain.Influencer;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

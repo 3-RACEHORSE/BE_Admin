@@ -1,11 +1,10 @@
-package com.sparos4th.admin.admin.presentation;
+package com.sparos4th.admin.influencer.presentation;
 
-import com.sparos4th.admin.admin.application.AdminService;
-import com.sparos4th.admin.admin.dto.InfluencerAddRequestDto;
-import com.sparos4th.admin.admin.dto.InfluencerDetailResponseDto;
-import com.sparos4th.admin.admin.dto.InfluencerUpdateRequestDto;
-import com.sparos4th.admin.admin.vo.InfluencerAddRequestVo;
-import com.sparos4th.admin.admin.vo.InfluencerDetailResponseVo;
+import com.sparos4th.admin.influencer.application.AdminService;
+import com.sparos4th.admin.influencer.dto.InfluencerAddRequestDto;
+import com.sparos4th.admin.influencer.dto.InfluencerDetailResponseDto;
+import com.sparos4th.admin.influencer.vo.InfluencerAddRequestVo;
+import com.sparos4th.admin.influencer.vo.InfluencerDetailResponseVo;
 import com.sparos4th.admin.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

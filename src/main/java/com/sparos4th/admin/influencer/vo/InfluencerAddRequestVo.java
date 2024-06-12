@@ -1,4 +1,4 @@
-package com.sparos4th.admin.admin.vo;
+package com.sparos4th.admin.influencer.vo;
 
 import lombok.Getter;
 

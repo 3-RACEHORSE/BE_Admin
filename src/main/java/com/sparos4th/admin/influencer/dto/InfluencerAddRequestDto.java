@@ -1,6 +1,6 @@
-package com.sparos4th.admin.admin.dto;
+package com.sparos4th.admin.influencer.dto;
 
-import com.sparos4th.admin.admin.vo.InfluencerAddRequestVo;
+import com.sparos4th.admin.influencer.vo.InfluencerAddRequestVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

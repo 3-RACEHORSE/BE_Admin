@@ -1,4 +1,4 @@
-package com.sparos4th.admin.admin.dto;
+package com.sparos4th.admin.influencer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
