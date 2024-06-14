@@ -60,7 +60,7 @@ public class JwtTokenProvider {
 		log.info("generateToken {}", userDetails);
 		return Jwts.builder()
 			.setClaims(extractClaims) //정보저장
-			.claim("role", userDetails.getAuthorities())
+			.claim("role", "admin")
 			.setSubject(userDetails.getUsername())
 			.setIssuedAt(new Date(System.currentTimeMillis())) //토근 발행 시간
 			.setExpiration(
@@ -68,5 +68,4 @@ public class JwtTokenProvider {
 			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 			.compact();
 	}
-
 }
