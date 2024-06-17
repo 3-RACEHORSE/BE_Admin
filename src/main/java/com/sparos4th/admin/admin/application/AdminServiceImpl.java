@@ -5,6 +5,7 @@ import com.sparos4th.admin.admin.dto.AdminAddRequestDto;
 import com.sparos4th.admin.admin.dto.AdminLoginRequestDto;
 import com.sparos4th.admin.admin.dto.TokenResponseDto;
 import com.sparos4th.admin.admin.infrastructure.AdminRepository;
+import com.sparos4th.admin.common.AdminGrant;
 import com.sparos4th.admin.common.exception.CustomException;
 import com.sparos4th.admin.common.exception.ResponseStatus;
 import com.sparos4th.admin.common.security.JwtTokenProvider;
@@ -44,7 +45,15 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	@Transactional
-	public void addAdmin(AdminAddRequestDto adminAddRequestDto) {
+	public void addAdmin(AdminAddRequestDto adminAddRequestDto, String accessToken) {
+		// 조회 및 검증
+		Admin checkAdmin = adminRepository.findByUuid(jwtTokenProvider.getUuid(accessToken))
+			.orElseThrow(() -> new CustomException(ResponseStatus.UNAUTHORIZED_USER));
+		AdminGrant role = checkAdmin.getGrant();
+		if(role != AdminGrant.ALL) {
+			throw new CustomException(ResponseStatus.UNAUTHORIZED_USER);
+		}
+
 		// 이메일 중복 확인
 		adminRepository.findByEmail(adminAddRequestDto.getEmail()).ifPresent(m -> {
 				throw new CustomException(ResponseStatus.DUPLICATE_EMAIL);
@@ -72,7 +81,7 @@ public class AdminServiceImpl implements AdminService{
 
 	//	토큰 생성
 	private String createToken(Admin admin) {
-		UserDetails userDetails = User.withUsername(admin.getEmail()).password(admin.getUuid())
+		UserDetails userDetails = User.withUsername(admin.getUuid())
 			.roles(String.valueOf(admin.getGrant())).build();
 		return jwtTokenProvider.generateToken(userDetails);
 	}
