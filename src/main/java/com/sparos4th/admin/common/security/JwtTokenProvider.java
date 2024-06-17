@@ -1,5 +1,7 @@
 package com.sparos4th.admin.common.security;
 
+import com.sparos4th.admin.common.exception.CustomException;
+import com.sparos4th.admin.common.exception.ResponseStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,10 +11,12 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -57,16 +61,20 @@ public class JwtTokenProvider {
 	}
 
 	public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+		String role = String.valueOf(userDetails.getAuthorities().stream().findFirst().orElseThrow(() -> new CustomException(
+			ResponseStatus.UNAUTHORIZED_USER)));
+
+
 		log.info("generateToken {}", userDetails);
 		return Jwts.builder()
 			.setClaims(extractClaims) //정보저장
-			.claim("uuid", userDetails.getPassword()) // uuid담기
+			.claim("role", role)
 			.setSubject(userDetails.getUsername())
+//			.setAudience(userDetails.getAuthorities())
 			.setIssuedAt(new Date(System.currentTimeMillis())) //토근 발행 시간
 			.setExpiration(
 				new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME)) //토큰 만료 시간
 			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 			.compact();
 	}
-
 }
