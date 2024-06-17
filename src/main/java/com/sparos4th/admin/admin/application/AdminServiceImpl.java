@@ -39,6 +39,7 @@ public class AdminServiceImpl implements AdminService{
 			String token = createToken(admin);
 			return TokenResponseDto.builder()
 				.accessToken(token)
+				.uuid(admin.getUuid())
 				.build();
 
 		} else throw new CustomException(ResponseStatus.FAILED_TO_LOGIN);
