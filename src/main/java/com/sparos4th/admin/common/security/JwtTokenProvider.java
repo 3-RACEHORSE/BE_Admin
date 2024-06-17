@@ -59,6 +59,8 @@ public class JwtTokenProvider {
 	public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
 		log.info("generateToken {}", userDetails);
 		return Jwts.builder()
+			.setClaims(extractClaims) //정보저장
+			.claim("role", userDetails.getAuthorities().toString())
 			.setSubject(userDetails.getUsername())
 			.setIssuedAt(new Date(System.currentTimeMillis())) //토근 발행 시간
 			.setExpiration(

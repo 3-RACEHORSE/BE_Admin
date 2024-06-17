@@ -29,6 +29,7 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	public TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto) {
+		log.info("로그인 실행");
 		// 이메일(ID)로 가입되어있는지 확인
 		Admin admin = adminRepository.findByEmail(adminLoginRequestDto.getEmail())
 			.orElseThrow(() -> new CustomException(ResponseStatus.FAILED_TO_LOGIN));
@@ -49,8 +50,8 @@ public class AdminServiceImpl implements AdminService{
 		// 조회 및 검증
 		Admin checkAdmin = adminRepository.findByUuid(jwtTokenProvider.getUuid(accessToken))
 			.orElseThrow(() -> new CustomException(ResponseStatus.UNAUTHORIZED_USER));
-		AdminGrant role = checkAdmin.getGrant();
-		if(role != AdminGrant.ALL) {
+		AdminGrant grant = checkAdmin.getGrant();
+		if(grant != AdminGrant.ALL) {
 			throw new CustomException(ResponseStatus.UNAUTHORIZED_USER);
 		}
 
@@ -59,7 +60,7 @@ public class AdminServiceImpl implements AdminService{
 				throw new CustomException(ResponseStatus.DUPLICATE_EMAIL);
 			});
 
-		String uuid = "admin" + UUID.randomUUID();
+		String uuid = UUID.randomUUID().toString();
 
 		// 비밀번호 암호화
 		String newPassword = hashPassword(adminAddRequestDto.getPassword());
@@ -81,8 +82,10 @@ public class AdminServiceImpl implements AdminService{
 
 	//	토큰 생성
 	private String createToken(Admin admin) {
-		UserDetails userDetails = User.withUsername(admin.getUuid())
-			.roles(String.valueOf(admin.getGrant())).build();
+		log.info("createToken 실행");
+		UserDetails userDetails = User.withUsername(admin.getUuid()).password(admin.getPassword())
+			.roles("admin").build();
+		log.info("UserDetails: {}", userDetails);
 		return jwtTokenProvider.generateToken(userDetails);
 	}
 
