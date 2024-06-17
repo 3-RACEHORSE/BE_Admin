@@ -9,6 +9,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,8 +31,11 @@ public class JwtTokenProvider {
 	@Value("${JWT.SECRET_KEY}")
 	private String secretKey;
 
-	@Value("${JWT.EXPIRATION_TIME}")
+	@Value("${JWT.ACCESS_TOKEN_EXPIRATION_TIME}")
 	private long ACCESS_TOKEN_EXPIRATION_TIME;
+
+	@Value("${JWT.REFRESH_TOKEN_EXPIRATION_TIME}")
+	private long REFRESH_TOKEN_EXPIRATION_TIME;
 
 	public String getUuid(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -60,21 +64,44 @@ public class JwtTokenProvider {
 		return generateToken(Map.of(), userDetails);
 	}
 
+	public String generateRefreshToken(UserDetails userDetails) {
+		return generateRefreshToken(Map.of(), userDetails);
+	}
+
 	public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
 		String role = String.valueOf(userDetails.getAuthorities().stream().findFirst().orElseThrow(() -> new CustomException(
 			ResponseStatus.UNAUTHORIZED_USER)));
 
-
 		log.info("generateToken {}", userDetails);
+		Map<String, Object> modifiableExtractClaims = new HashMap<>(extractClaims);
+		modifiableExtractClaims.put("TokenType", "access");
+
 		return Jwts.builder()
-			.setClaims(extractClaims) //정보저장
+			.setClaims(modifiableExtractClaims) //정보저장
 			.claim("role", role)
 			.setSubject(userDetails.getUsername())
-//			.setAudience(userDetails.getAuthorities())
 			.setIssuedAt(new Date(System.currentTimeMillis())) //토근 발행 시간
 			.setExpiration(
 				new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME)) //토큰 만료 시간
 			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 			.compact();
+	}
+
+	public String generateRefreshToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+		String role = String.valueOf(userDetails.getAuthorities().stream().findFirst().orElseThrow(() -> new CustomException(
+			ResponseStatus.UNAUTHORIZED_USER)));
+		Map<String, Object> modifiableExtractClaims = new HashMap<>(extractClaims);
+		modifiableExtractClaims.put("TokenType", "refresh");
+
+		return Jwts.builder()
+			.setClaims(modifiableExtractClaims) //정보저장
+			.claim("role", role)
+			.setSubject(userDetails.getUsername())
+			.setIssuedAt(new Date(System.currentTimeMillis())) //토근 발행 시간
+			.setExpiration(
+				new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME)) //토큰 만료 시간
+			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
+			.compact();
+
 	}
 }
