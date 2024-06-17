@@ -28,7 +28,7 @@ public class Admin {
 	private String name;
 	@Column(name = "admin_email", nullable = false, length = 30, unique = true)
 	private String email;
-	@Column(name = "admin_password", nullable = false, length = 50)
+	@Column(name = "admin_password", nullable = false)
 	private String password;
 	@Column(name = "admin_grant", nullable = false)
 	@Enumerated(EnumType.STRING)
