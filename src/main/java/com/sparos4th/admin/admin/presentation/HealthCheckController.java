@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/payment-service")
+@RequestMapping
 public class HealthCheckController {
 
-    @GetMapping("/temp/health")
-    public SuccessResponse<Object> heathCheck() {
+    @GetMapping("/health-check")
+    public SuccessResponse<Object> healthCheck() {
         return new SuccessResponse<>(null);
     }
 }
