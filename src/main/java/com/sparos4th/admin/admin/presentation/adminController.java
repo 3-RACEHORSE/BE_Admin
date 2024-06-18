@@ -31,9 +31,9 @@ public class adminController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입")
     public SuccessResponse<Object> snsAddMember(
-        @RequestBody AdminAddRequestVo adminAddRequestVo, @RequestHeader String accessToken) {
+        @RequestBody AdminAddRequestVo adminAddRequestVo) {
         log.info(adminAddRequestVo.toString());
-        adminService.addAdmin(AdminAddRequestDto.voToDto(adminAddRequestVo), accessToken);
+        adminService.addAdmin(AdminAddRequestDto.voToDto(adminAddRequestVo));
         return new SuccessResponse<>(null);
     }
     @PostMapping("/login")
