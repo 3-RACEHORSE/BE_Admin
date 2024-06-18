@@ -45,6 +45,8 @@ public class adminController {
 
         return ResponseEntity.ok()
             .header(HttpHeaders.AUTHORIZATION, tokenResponseDto.getAccessToken())
+            .header("RefreshToken", tokenResponseDto.getRefreshToken())
+            .header("uuid", tokenResponseDto.getUuid())
             .body(new SuccessResponse<>(null));
     }
 
