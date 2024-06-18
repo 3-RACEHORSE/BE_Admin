@@ -5,6 +5,7 @@ import com.sparos4th.admin.admin.dto.AdminAddRequestDto;
 import com.sparos4th.admin.admin.dto.AdminLoginRequestDto;
 import com.sparos4th.admin.admin.dto.TokenResponseDto;
 import com.sparos4th.admin.admin.infrastructure.AdminRepository;
+import com.sparos4th.admin.admin.infrastructure.RefreshTokenCertification;
 import com.sparos4th.admin.common.AdminGrant;
 import com.sparos4th.admin.common.exception.CustomException;
 import com.sparos4th.admin.common.exception.ResponseStatus;
@@ -26,6 +27,7 @@ public class AdminServiceImpl implements AdminService{
 	private final AdminRepository adminRepository;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final RefreshTokenCertification refreshTokenCertification;
 
 	@Override
 	public TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto) {
@@ -36,9 +38,15 @@ public class AdminServiceImpl implements AdminService{
 
 		// 해시 암호화된 DB의 비밀번호 저장값과 로그인 정보에 담긴 비밀번호 비교
 		if (bCryptPasswordEncoder.matches(adminLoginRequestDto.getPassword(), admin.getPassword())) {
-			String token = createToken(admin);
+			String accessToken = createToken(admin);
+			String refreshToken = createRefreshToken(admin);
+
+			refreshTokenCertification.saveRefreshToken(admin.getUuid(), refreshToken);
+
 			return TokenResponseDto.builder()
-				.accessToken(token)
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
+				.uuid(admin.getUuid())
 				.build();
 
 		} else throw new CustomException(ResponseStatus.FAILED_TO_LOGIN);
@@ -80,13 +88,36 @@ public class AdminServiceImpl implements AdminService{
         return new BCryptPasswordEncoder().encode(password);
 	}
 
-	//	토큰 생성
+	// 엑세스 토큰 생성
 	private String createToken(Admin admin) {
-		log.info("createToken 실행");
 		UserDetails userDetails = User.withUsername(admin.getUuid()).password(admin.getPassword())
 			.roles("admin").build();
-		log.info("UserDetails: {}", userDetails);
 		return jwtTokenProvider.generateToken(userDetails);
+	}
+
+	// 리프레쉬 토큰 생성
+	private String createRefreshToken(Admin admin) {
+		UserDetails userDetails = User.withUsername(admin.getUuid()).password(admin.getPassword())
+			.roles("admin").build();
+		return jwtTokenProvider.generateRefreshToken(userDetails);
+	}
+
+	// 토큰 재발급
+	@Override
+	public TokenResponseDto tokenReIssue(String receiveToken, String uuid) {
+		Admin admin = adminRepository.findByUuid(uuid)
+			.orElseThrow(() -> new CustomException(ResponseStatus.USER_NOT_FOUND));
+		if (refreshTokenCertification.hasKey(uuid) && refreshTokenCertification.getRefreshToken(uuid)
+			.equals(receiveToken)) {
+			String token = createToken(admin);
+			return TokenResponseDto.builder()
+				.accessToken(token)
+				.refreshToken(null)
+				.uuid(admin.getUuid())
+				.build();
+		} else {
+			throw new CustomException(ResponseStatus.TOKEN_NOT_VALID);
+		}
 	}
 
 //	@Override

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public interface AdminService {
 	TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto);
 	void addAdmin(AdminAddRequestDto adminAddRequestDto, String adminUuid);
+	TokenResponseDto tokenReIssue(String receiveToken, String uuid);
 //	void changePassword(AdminChangePasswordRequestDto adminChangeP+
 
 }
