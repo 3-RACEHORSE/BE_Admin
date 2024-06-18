@@ -1,15 +1,14 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/admin
-    username: postgres
-    password: 1234
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    database: postgresql
+  application:
+    name: admin-service
+  profiles:
+    active: none
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL}
 
-JWT:
-  SECRET_KEY: ${JWT.SECRET_KEY}
-  EXPIRATION_TIME: ${JWT.EXPIRATION_TIME}
+  cloud:
+    config:
+      profile: ${PROFILE}
+
+encrypt:
+  key: ${ENCRYPT_KEY}
