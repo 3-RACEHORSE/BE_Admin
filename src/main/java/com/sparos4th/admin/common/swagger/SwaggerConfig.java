@@ -33,6 +33,6 @@ public class SwaggerConfig {
         return new OpenAPI()
             .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
             .security(Arrays.asList(securityRequirement))
-            .addServersItem(new Server().url("/admin-service"));
+            .addServersItem(new Server().url("/"));
     }
 }
