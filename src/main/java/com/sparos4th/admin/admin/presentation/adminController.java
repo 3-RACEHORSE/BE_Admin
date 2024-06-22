@@ -29,6 +29,21 @@ public class adminController {
 
 	private final AdminService adminService;
 
+    @PostMapping("/signup")
+    @Operation(summary = "회원가입", description = "회원가입")
+    public SuccessResponse<Object> snsAddMember(
+        @RequestBody AdminAddRequestVo adminAddRequestVo, @RequestHeader String accessToken) {
+        log.info(adminAddRequestVo.toString());
+        adminService.addAdmin(AdminAddRequestDto.voToDto(adminAddRequestVo), accessToken);
+        return new SuccessResponse<>(null);
+    }
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "로그인")
+    public ResponseEntity<SuccessResponse<Object>> login(
+        @RequestBody AdminLoginRequestVo adminLoginRequestVo) {
+        TokenResponseDto tokenResponseDto = adminService.login(
+            AdminLoginRequestDto.voToDto(adminLoginRequestVo));
+
 	@PostMapping("/signup")
 	@Operation(summary = "어드민회원가입", description = "어드민회원가입")
 	public SuccessResponse<Object> snsAddMember(

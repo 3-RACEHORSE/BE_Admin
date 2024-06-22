@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 public interface AdminService {
 	TokenResponseDto login(AdminLoginRequestDto adminLoginRequestDto);
-	void addAdmin(AdminAddRequestDto adminAddRequestDto);
+	void addAdmin(AdminAddRequestDto adminAddRequestDto, String accessToken);
 	TokenResponseDto tokenReIssue(String receiveToken, String uuid);
 
 }
