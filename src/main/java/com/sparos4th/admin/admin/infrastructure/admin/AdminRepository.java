@@ -1,6 +1,6 @@
-package com.sparos4th.admin.admin.infrastructure;
+package com.sparos4th.admin.admin.infrastructure.admin;
 
-import com.sparos4th.admin.admin.domain.Admin;
+import com.sparos4th.admin.admin.domain.admin.Admin;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

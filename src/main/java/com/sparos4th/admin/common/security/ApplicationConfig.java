@@ -1,6 +1,6 @@
 package com.sparos4th.admin.common.security;
 
-import com.sparos4th.admin.admin.infrastructure.AdminRepository;
+import com.sparos4th.admin.admin.infrastructure.admin.AdminRepository;
 import com.sparos4th.admin.common.exception.CustomException;
 import com.sparos4th.admin.common.exception.ResponseStatus;
 import java.util.ArrayList;
