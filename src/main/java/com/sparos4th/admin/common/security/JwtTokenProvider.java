@@ -3,10 +3,15 @@ package com.sparos4th.admin.common.security;
 import com.sparos4th.admin.common.exception.CustomException;
 import com.sparos4th.admin.common.exception.ResponseStatus;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +34,7 @@ public class JwtTokenProvider {
 	private final Environment env;
 
 	@Value("${JWT.SECRET_KEY}")
-	private String secretKey;
+	private String SECRETKEY;
 
 	@Value("${JWT.ACCESS_TOKEN_EXPIRATION_TIME}")
 	private long ACCESS_TOKEN_EXPIRATION_TIME;
@@ -103,5 +108,28 @@ public class JwtTokenProvider {
 			.signWith(getSigningKey(), SignatureAlgorithm.HS256)
 			.compact();
 
+	}
+
+	public void validateJwtToken(String token) {
+		try {
+			Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRETKEY).parseClaimsJws(token);
+			String tokenType = claimsJws.getBody().get("TokenType", String.class);
+			log.info("tokenType: {}", tokenType);
+			if ("refresh".equals(tokenType)) {
+				throw new CustomException(ResponseStatus.JWT_FAIL_WITH_REFRESH);
+			}
+		} catch (SignatureException e) {
+			throw new CustomException(ResponseStatus.INVALID_SIGNATURE_TOKEN);
+		} catch (MalformedJwtException e) {
+			throw new CustomException(ResponseStatus.DAMAGED_TOKEN);
+		} catch (UnsupportedJwtException e) {
+			throw new CustomException(ResponseStatus.UNSUPPORTED_TOKEN);
+		} catch (ExpiredJwtException e) {
+			throw new CustomException(ResponseStatus.EXPIRED_TOKEN);
+		} catch (IllegalArgumentException e) {
+			throw new CustomException(ResponseStatus.INVALID_TOKEN);
+		} catch (Exception e) {
+			throw new CustomException(ResponseStatus.VERIFICATION_FAILED);
+		}
 	}
 }
