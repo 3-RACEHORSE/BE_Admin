@@ -26,40 +26,49 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "관리자", description = "관리자 관리 API")
 @RequestMapping("/api/v1/admin")
 public class adminController {
-    private final AdminService adminService;
 
-    @PostMapping("/signup")
-    @Operation(summary = "회원가입", description = "회원가입")
-    public SuccessResponse<Object> snsAddMember(
-        @RequestBody AdminAddRequestVo adminAddRequestVo, @RequestHeader String accessToken) {
-        log.info(adminAddRequestVo.toString());
-        adminService.addAdmin(AdminAddRequestDto.voToDto(adminAddRequestVo), accessToken);
-        return new SuccessResponse<>(null);
-    }
-    @PostMapping("/login")
-    @Operation(summary = "로그인", description = "로그인")
-    public ResponseEntity<SuccessResponse<Object>> login(
-        @RequestBody AdminLoginRequestVo adminLoginRequestVo) {
-        TokenResponseDto tokenResponseDto = adminService.login(
-            AdminLoginRequestDto.voToDto(adminLoginRequestVo));
+	private final AdminService adminService;
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, tokenResponseDto.getAccessToken())
-            .header("RefreshToken", tokenResponseDto.getRefreshToken())
-            .header("uuid", tokenResponseDto.getUuid())
-            .body(new SuccessResponse<>(null));
-    }
+	@PostMapping("/signup")
+	@Operation(summary = "어드민회원가입", description = "어드민회원가입")
+	public SuccessResponse<Object> snsAddMember(
+		@RequestBody AdminAddRequestVo adminAddRequestVo, @RequestHeader String accessToken) {
+		log.info(adminAddRequestVo.toString());
+		adminService.addAdmin(AdminAddRequestDto.voToDto(adminAddRequestVo), accessToken);
+		return new SuccessResponse<>(null);
+	}
 
-    @GetMapping("/reissue")
-    @Operation(summary = "토큰 재발급", description = "refreshToken을 활용하여 accessToken을 재발급합니다")
-    public ResponseEntity<SuccessResponse<Object>> reIssue(@RequestHeader String uuid,
-        @RequestHeader String refreshToken) {
-        TokenResponseDto tokenResponseDto = adminService.tokenReIssue(refreshToken, uuid);
+	@PostMapping("/login")
+	@Operation(summary = "어드민로그인", description = "어드민로그인")
+	public ResponseEntity<SuccessResponse<Object>> login(
+		@RequestBody AdminLoginRequestVo adminLoginRequestVo) {
+		TokenResponseDto tokenResponseDto = adminService.login(
+			AdminLoginRequestDto.voToDto(adminLoginRequestVo));
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, tokenResponseDto.getAccessToken())
-            .header("RefreshToken", refreshToken)
-            .header("uuid", tokenResponseDto.getUuid())
-            .body(new SuccessResponse<>(null));
-    }
+		return ResponseEntity.ok()
+			.header(HttpHeaders.AUTHORIZATION, tokenResponseDto.getAccessToken())
+			.header("RefreshToken", tokenResponseDto.getRefreshToken())
+			.header("uuid", tokenResponseDto.getUuid())
+			.body(new SuccessResponse<>(null));
+	}
+
+	@GetMapping("/reissue")
+	@Operation(summary = "어드민 토큰 재발급", description = "어드민 refreshToken을 활용하여 accessToken을 재발급합니다")
+	public ResponseEntity<SuccessResponse<Object>> reIssue(@RequestHeader String uuid,
+		@RequestHeader String refreshToken) {
+		TokenResponseDto tokenResponseDto = adminService.tokenReIssue(refreshToken, uuid);
+
+		return ResponseEntity.ok()
+			.header(HttpHeaders.AUTHORIZATION, tokenResponseDto.getAccessToken())
+			.header("RefreshToken", refreshToken)
+			.header("uuid", tokenResponseDto.getUuid())
+			.body(new SuccessResponse<>(null));
+
+	}
+
+	@GetMapping("/test")
+	public String test(@RequestHeader String uuid) {
+		log.info("success test");
+		return "test";
+	}
 }
