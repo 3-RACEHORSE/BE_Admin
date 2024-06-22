@@ -54,7 +54,13 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	@Transactional
-	public void addAdmin(AdminAddRequestDto adminAddRequestDto) {
+	public void addAdmin(AdminAddRequestDto adminAddRequestDto, String accessToken) {
+		Admin checkAdmin = adminRepository.findByUuid(jwtTokenProvider.getUuid(accessToken))
+			.orElseThrow(() -> new CustomException(ResponseStatus.UNAUTHORIZED_USER));
+		AdminGrant grant = checkAdmin.getGrant();
+		if(grant != AdminGrant.ALL) {
+			throw new CustomException(ResponseStatus.UNAUTHORIZED_USER);
+		}
 		// 이메일 중복 확인
 		adminRepository.findByEmail(adminAddRequestDto.getEmail()).ifPresent(m -> {
 				throw new CustomException(ResponseStatus.DUPLICATE_EMAIL);
