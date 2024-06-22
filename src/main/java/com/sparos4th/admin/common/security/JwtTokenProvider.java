@@ -132,4 +132,12 @@ public class JwtTokenProvider {
 			throw new CustomException(ResponseStatus.VERIFICATION_FAILED);
 		}
 	}
+
+	public String validateAndGetUserUuid(String token) {
+		try {
+			return extractClaim(token, Claims::getSubject);
+		} catch (Exception e) {
+			throw new CustomException(ResponseStatus.JWT_VALID_FAILED);
+		}
+	}
 }
