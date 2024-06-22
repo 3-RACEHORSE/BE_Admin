@@ -1,10 +1,10 @@
 package com.sparos4th.admin.admin.application;
 
-import com.sparos4th.admin.admin.domain.Admin;
+import com.sparos4th.admin.admin.domain.admin.Admin;
 import com.sparos4th.admin.admin.dto.AdminAddRequestDto;
 import com.sparos4th.admin.admin.dto.AdminLoginRequestDto;
 import com.sparos4th.admin.admin.dto.TokenResponseDto;
-import com.sparos4th.admin.admin.infrastructure.AdminRepository;
+import com.sparos4th.admin.admin.infrastructure.admin.AdminRepository;
 import com.sparos4th.admin.admin.infrastructure.RefreshTokenCertification;
 import com.sparos4th.admin.common.AdminGrant;
 import com.sparos4th.admin.common.exception.CustomException;
