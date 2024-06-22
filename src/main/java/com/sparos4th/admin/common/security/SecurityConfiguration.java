@@ -41,7 +41,7 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(
 				authorizeHttpRequests -> authorizeHttpRequests
 					// 허용 범위
-					.requestMatchers("/api/v1/admin/**", "/swagger-ui/**", "/swagger-resources/**",
+					.requestMatchers("/api/v1/**", "/swagger-ui/**", "/swagger-resources/**",
 						"/v3/api-docs/**")
 					.permitAll()
 					.anyRequest()
