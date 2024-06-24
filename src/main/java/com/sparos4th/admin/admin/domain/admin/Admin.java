@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "admin")
-public class Admin extends BaseTimeEntity {
+public class Admin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
