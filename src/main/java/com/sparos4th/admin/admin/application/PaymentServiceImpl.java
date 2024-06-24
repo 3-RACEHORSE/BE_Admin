@@ -18,28 +18,10 @@ public class PaymentServiceImpl implements PaymentService {
 	private final BankRepository bankRepository;
 
 	@Override
-	public List<PostDonationResponseVo> donationList() {
-		List<PostDonationResponseDto> postDonationResponseDtoList = new ArrayList<>();
+	public List<PostDonationResponseDto> donationList() {
 
 		List<Bank> donationList = bankRepository.findAll();
 
-		donationList.stream()
-			.map(bank ->
-				PostDonationResponseDto.builder()
-					.auctionUuid(bank.getAuctionUuid())
-					.donation(bank.getDonation())
-					.build())
-			.forEach(postDonationResponseDtoList::add);
-
-		List<PostDonationResponseVo> donationResponseVoList = new ArrayList<>();
-
-		postDonationResponseDtoList.stream()
-			.map(dto -> PostDonationResponseVo.builder()
-				.auctionUuid(dto.getAuctionUuid())
-				.donation(dto.getDonation())
-				.build())
-			.forEach(donationResponseVoList::add);
-
-		return donationResponseVoList;
+		return donationList.stream().map(PostDonationResponseDto::entityToDto).toList();
 	}
 }
