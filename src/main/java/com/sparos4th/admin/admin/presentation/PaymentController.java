@@ -22,8 +22,9 @@ public class PaymentController {
 
 	@GetMapping("/donationlist")
 	@Operation(summary = "기부금 내역 조회", description = "기부금 내역 조회")
-	public SuccessResponse<List<PostDonationResponseVo>> PostDonationList (){
-		return new SuccessResponse<>(paymentService.donationList());
+	public SuccessResponse<List<PostDonationResponseVo>> PostDonationList() {
+		return new SuccessResponse<>(
+			(paymentService.donationList()).stream().map(PostDonationResponseVo::dtoToVo).toList());
 	}
 
 }
