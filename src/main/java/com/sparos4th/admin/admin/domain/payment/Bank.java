@@ -34,4 +34,5 @@ public class Bank extends BaseTimeEntity {
 		this.auctionUuid = auctionUuid;
 		this.donation = donation;
 	}
+
 }
