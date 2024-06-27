@@ -2,13 +2,13 @@ package com.sparos4th.admin.admin.presentation;
 
 import com.sparos4th.admin.admin.application.PaymentService;
 import com.sparos4th.admin.admin.vo.PostDonationResponseVo;
+import com.sparos4th.admin.admin.vo.TotalDonationSettlementResponseVo;
 import com.sparos4th.admin.common.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,4 +27,10 @@ public class PaymentController {
 			(paymentService.donationList()).stream().map(PostDonationResponseVo::dtoToVo).toList());
 	}
 
+	@GetMapping("/totaldonation")
+	@Operation(summary = "총 기부금 조회", description = "총 기부금 조회")
+	public SuccessResponse<TotalDonationSettlementResponseVo> totalDonation() {
+		return new SuccessResponse<>(
+			TotalDonationSettlementResponseVo.dtoToVo(paymentService.totalDonation()));
+	}
 }
