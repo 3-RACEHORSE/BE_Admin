@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TotalSettlementRepository extends JpaRepository<TotalDonationSettlement, Long> {
 
-	TotalDonationSettlement findByTotalSettlementId(Long totalSettlementId);
+	Optional<TotalDonationSettlement> findById(Long id);
 }
