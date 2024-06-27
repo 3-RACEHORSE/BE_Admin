@@ -87,7 +87,7 @@ jobs:
           sudo docker rm admin-service     
 
       - name: Run new docker container
-        run: sudo docker run -d --restart unless-stopped --name admin-service -p ${{ secrets.POST_FORWOADING }} --net cheonma-network ${{ secrets.DOCKERHUB_USERNAME }}/admin-service:latest
+        run: sudo docker run -d --name admin-service -p ${{ secrets.POST_FORWOADING }} --net cheonma-network ${{ secrets.DOCKERHUB_USERNAME }}/admin-service:latest
 
       - name: Delete old docker image
         run: sudo docker system prune -f
