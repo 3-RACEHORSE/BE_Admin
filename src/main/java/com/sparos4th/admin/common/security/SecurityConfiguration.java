@@ -1,5 +1,7 @@
 package com.sparos4th.admin.common.security;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -44,8 +46,13 @@ public class SecurityConfiguration {
 				authorizeHttpRequests -> authorizeHttpRequests
 					.requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
 					// 허용 범위
-					.requestMatchers("/api/v1/admin/auth/**", "/api/v1/admin/health-check", "/swagger-ui/**", "/swagger-resources/**",
-						"/v3/api-docs/**", "/error")
+					.requestMatchers(
+						antMatcher("/api/v1/admin/auth/**"),
+						antMatcher("/api/v1/admin/health-check"),
+						antMatcher("/swagger-ui/**"),
+						antMatcher("/swagger-resources/**"),
+						antMatcher("/v3/api-docs/**"),
+						antMatcher("/error"))
 					.permitAll()
 					.anyRequest()
 					.authenticated()
