@@ -1,9 +1,13 @@
 package com.sparos4th.admin.common.security;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,9 +30,10 @@ public class SecurityConfiguration {
 	public CorsConfigurationSource corsConfigurationSource() {
 		return request -> {
 			var cors = new org.springframework.web.cors.CorsConfiguration();
-			cors.setAllowedOriginPatterns(List.of("*"));
-			cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+			cors.setAllowedOriginPatterns(List.of("https://racehorseteam.store", "http://localhost:3000", "https://fe-meetplus.vercel.app"));
+			cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
 			cors.setAllowedHeaders(List.of("*"));
+			cors.setAllowCredentials(true);
 			return cors;
 		};
 	}
@@ -37,12 +42,19 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(CsrfConfigurer::disable)
 			.authorizeHttpRequests(
 				authorizeHttpRequests -> authorizeHttpRequests
+					.requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
 					// 허용 범위
-					.requestMatchers("/api/v1/admin/auth/**", "/api/v1/admin/health-check", "/swagger-ui/**", "/swagger-resources/**",
-						"/v3/api-docs/**", "/error")
+					.requestMatchers(
+						antMatcher("/api/v1/admin/auth/**"),
+						antMatcher("/api/v1/admin/health-check"),
+						antMatcher("/swagger-ui/**"),
+						antMatcher("/swagger-resources/**"),
+						antMatcher("/v3/api-docs/**"),
+						antMatcher("/error"))
 					.permitAll()
 					.anyRequest()
 					.authenticated()
