@@ -2,6 +2,7 @@ package com.sparos4th.admin.common.security;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,7 @@ public class SecurityConfiguration {
 	public CorsConfigurationSource corsConfigurationSource() {
 		return request -> {
 			var cors = new org.springframework.web.cors.CorsConfiguration();
-			cors.setAllowedOrigins(List.of("https://racehorseteam.store", "http://localhost:3000", "https://fe-meetplus.vercel.app"));
+			cors.setAllowedOriginPatterns(List.of("https://racehorseteam.store", "http://localhost:3000", "https://fe-meetplus.vercel.app"));
 			cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 			cors.setAllowedHeaders(List.of("*"));
 			cors.setAllowCredentials(true);
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(CsrfConfigurer::disable)
 			.authorizeHttpRequests(
 				authorizeHttpRequests -> authorizeHttpRequests
