@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,6 +41,7 @@ public class SecurityConfiguration {
 			.csrf(CsrfConfigurer::disable)
 			.authorizeHttpRequests(
 				authorizeHttpRequests -> authorizeHttpRequests
+					.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 					// 허용 범위
 					.requestMatchers("/api/v1/admin/auth/**", "/api/v1/admin/health-check", "/swagger-ui/**", "/swagger-resources/**",
 						"/v3/api-docs/**", "/error")
