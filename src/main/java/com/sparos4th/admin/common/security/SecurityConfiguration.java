@@ -30,7 +30,7 @@ public class SecurityConfiguration {
 	public CorsConfigurationSource corsConfigurationSource() {
 		return request -> {
 			var cors = new org.springframework.web.cors.CorsConfiguration();
-			cors.setAllowedOriginPatterns(List.of("https://racehorseteam.store", "http://localhost:3000", "https://fe-meetplus.vercel.app"));
+			cors.setAllowedOriginPatterns(List.of("https://racehorseteam.store", "http://localhost:3000", "https://fe-meetplus.vercel.app", "https://fe-admin-xi.vercel.app/"));
 			cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
 			cors.setAllowedHeaders(List.of("*"));
 			cors.setAllowCredentials(true);
